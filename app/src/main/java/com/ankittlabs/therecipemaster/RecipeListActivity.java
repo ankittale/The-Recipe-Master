@@ -7,32 +7,34 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.ankittlabs.therecipemaster.adapter.RecipeViewAdapter;
 import com.ankittlabs.therecipemaster.model.Recipe;
 import com.ankittlabs.therecipemaster.utils.Testing;
 import com.ankittlabs.therecipemaster.viewmodels.RecipeViewModel;
 
 import java.util.List;
 
-public class RecipeListActivity extends AppCompatActivity {
+public class RecipeListActivity extends AppCompatActivity implements OnRecipeListener {
 
     private static final String TAG = "RecipeListActivity";
+    RecyclerView recipeRecyclerView;
+    private RecipeViewAdapter recipeViewAdapter;
     private RecipeViewModel recipeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
-
+        recipeRecyclerView = findViewById(R.id.recycler_recipe);
         //View Model Setup
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                testRetrofit();
-            }
-        });
+
         subscribeObserver();
+        initRecyclerView();
+        testRetrofit();
     }
 
     //subscribe the data
@@ -41,10 +43,16 @@ public class RecipeListActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Recipe> recipes) {
                 if (recipes != null) {
-                    Testing.printRecipe(recipes, "recipes");
+                    recipeViewAdapter.setRecipes(recipes);
                 }
             }
         });
+    }
+
+    private void initRecyclerView() {
+        recipeViewAdapter = new RecipeViewAdapter(this);
+        recipeRecyclerView.setAdapter(recipeViewAdapter);
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void searchRecipeApi(String query, int pageNumber) {
@@ -53,5 +61,15 @@ public class RecipeListActivity extends AppCompatActivity {
 
     private void testRetrofit() {
         searchRecipeApi("chicken", 1);
+    }
+
+    @Override
+    public void onRecipeClick(int position) {
+
+    }
+
+    @Override
+    public void onCategoryClick(int position) {
+
     }
 }
