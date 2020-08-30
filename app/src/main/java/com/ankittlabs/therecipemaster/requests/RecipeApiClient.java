@@ -74,7 +74,7 @@ public class RecipeApiClient {
         @Override
         public void run() {
             try {
-                Response response = getRecipes(query,pageNumber).execute();
+                Response response = getRecipes(query, pageNumber).execute();
                 if (cancelRequest) {
                     return;
                 }
@@ -106,6 +106,12 @@ public class RecipeApiClient {
         private void cancelRequest() {
             Log.d(TAG, "cancelRequest: Cancel Recipe Request");
             cancelRequest = true;
+        }
+    }
+
+    public void cancelRequest() {
+        if (retrieveRecipeRunnable != null) {
+            retrieveRecipeRunnable.cancelRequest();
         }
     }
 }

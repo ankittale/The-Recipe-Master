@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ankittlabs.therecipemaster.adapter.RecipeViewAdapter;
 import com.ankittlabs.therecipemaster.model.Recipe;
+import com.ankittlabs.therecipemaster.utils.VerticalItemDecorator;
 import com.ankittlabs.therecipemaster.viewmodels.RecipeViewModel;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
     RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeViewAdapter;
     private RecipeViewModel recipeViewModel;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,10 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         subscribeObserver();
         initRecyclerView();
         initSearchView();
+
+        if (!recipeViewModel.isViewRecipe()) {
+            displaySearchCategory();
+        }
     }
 
     //subscribe the data
@@ -41,7 +47,10 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
             @Override
             public void onChanged(List<Recipe> recipes) {
                 if (recipes != null) {
-                    recipeViewAdapter.setRecipes(recipes);
+                    if (recipeViewModel.isViewRecipe()) {
+                        recipeViewModel.setPerformingQuery(false); //Query is completed
+                        recipeViewAdapter.setRecipes(recipes);
+                    }
                 }
             }
         });
@@ -49,21 +58,20 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
 
     private void initRecyclerView() {
         recipeViewAdapter = new RecipeViewAdapter(this);
+        VerticalItemDecorator verticalItemDecorator = new VerticalItemDecorator(30);
+        recipeRecyclerView.addItemDecoration(verticalItemDecorator);
         recipeRecyclerView.setAdapter(recipeViewAdapter);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void searchRecipeApi(String query, int pageNumber) {
-        recipeViewModel.searchRecipeApi(query, pageNumber);
-    }
-
     private void initSearchView() {
-        final SearchView searchView = findViewById(R.id.search_view);
+        searchView = findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 recipeViewAdapter.displayLoading();
                 recipeViewModel.searchRecipeApi(query, 1);
+                searchView.clearFocus();
                 return false;
             }
 
@@ -80,7 +88,23 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
     }
 
     @Override
-    public void onCategoryClick(int position) {
+    public void onCategoryClick(String category) {
+        recipeViewAdapter.displayLoading();
+        recipeViewModel.searchRecipeApi(category, 1);
+        searchView.clearFocus();
+    }
 
+    private void displaySearchCategory() {
+        recipeViewModel.setViewRecipe(false);
+        recipeViewAdapter.displaySearchCategory();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (recipeViewModel.onBackPressed()) {
+            super.onBackPressed();
+        } else {
+            displaySearchCategory();
+        }
     }
 }

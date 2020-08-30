@@ -1,5 +1,7 @@
 package com.ankittlabs.therecipemaster.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,9 +13,12 @@ import java.util.List;
 public class RecipeViewModel extends ViewModel {
 
     private RecipeRepository recipeRepository;
+    private boolean performingQuery;
+    private boolean viewRecipe;
 
     public RecipeViewModel() {
-        recipeRepository= RecipeRepository.getInstance();
+        performingQuery = false;
+        recipeRepository = RecipeRepository.getInstance();
     }
 
     public LiveData<List<Recipe>> getRecipes() {
@@ -21,6 +26,35 @@ public class RecipeViewModel extends ViewModel {
     }
 
     public void searchRecipeApi(String query, int pageNumber) {
+        viewRecipe = true;
         recipeRepository.searchRecipeApi(query, pageNumber);
+    }
+
+    public boolean isViewRecipe() {
+        return viewRecipe;
+    }
+
+    public void setViewRecipe(boolean viewRecipe) {
+        this.viewRecipe = viewRecipe;
+    }
+
+    public void setPerformingQuery(boolean isPerformingQuery) {
+        performingQuery = isPerformingQuery;
+    }
+
+    public boolean isPerformingQuery() {
+        return performingQuery;
+    }
+
+    public boolean onBackPressed() {
+        if (performingQuery) {
+            recipeRepository.cancelRequestMethod();
+            performingQuery = false;
+        }
+        if (viewRecipe) {
+            viewRecipe = false;
+            return false;
+        }
+        return true;
     }
 }
