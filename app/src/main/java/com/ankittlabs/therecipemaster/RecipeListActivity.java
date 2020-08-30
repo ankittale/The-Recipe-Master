@@ -1,10 +1,9 @@
 package com.ankittlabs.therecipemaster;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ankittlabs.therecipemaster.adapter.RecipeViewAdapter;
 import com.ankittlabs.therecipemaster.model.Recipe;
-import com.ankittlabs.therecipemaster.utils.Testing;
 import com.ankittlabs.therecipemaster.viewmodels.RecipeViewModel;
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
 
         subscribeObserver();
         initRecyclerView();
-        testRetrofit();
+        initSearchView();
     }
 
     //subscribe the data
@@ -59,8 +57,21 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         recipeViewModel.searchRecipeApi(query, pageNumber);
     }
 
-    private void testRetrofit() {
-        searchRecipeApi("chicken", 1);
+    private void initSearchView() {
+        final SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                recipeViewAdapter.displayLoading();
+                recipeViewModel.searchRecipeApi(query, 1);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
     }
 
     @Override
