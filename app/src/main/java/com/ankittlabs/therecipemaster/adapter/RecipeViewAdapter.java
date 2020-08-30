@@ -83,7 +83,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Glide.with(holder.itemView.getContext())
                     .setDefaultRequestOptions(requestOptions)
                     .load(path)
-                    .into(((CategoryViewHolder)holder).categoryImage);
+                    .into(((CategoryViewHolder) holder).categoryImage);
 
             ((CategoryViewHolder) holder).categoryTitle.setText(recipes.get(position).getTitle());
         }
@@ -94,6 +94,10 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (recipes.get(position).getSocial_rank() == -1) {
             return CATEGORY_TYPE;
         } else if (recipes.get(position).getTitle().equals("LOADING...")) {
+            return LOADING_TYPE;
+        } else if (position == recipes.size() - 1
+                && position != 0
+                && !recipes.get(position).getTitle().equals("EXHAUSTED...")) {
             return LOADING_TYPE;
         } else {
             return RECIPE_TYPE;

@@ -30,6 +30,12 @@ public class RecipeViewModel extends ViewModel {
         recipeRepository.searchRecipeApi(query, pageNumber);
     }
 
+    public void searchNextPage() {
+        if (!performingQuery && viewRecipe) {
+            recipeRepository.searchOnNextPage();
+        }
+    }
+
     public boolean isViewRecipe() {
         return viewRecipe;
     }

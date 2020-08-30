@@ -1,5 +1,7 @@
 package com.ankittlabs.therecipemaster.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -12,6 +14,8 @@ public class RecipeRepository {
 
     private static RecipeRepository instance;
     private RecipeApiClient recipeApiClient;
+    private String mQuery;
+    private int mPageNumber;
 
     public static RecipeRepository getInstance() {
         if (instance == null) {
@@ -29,10 +33,16 @@ public class RecipeRepository {
     }
 
     public void searchRecipeApi(String query, int pageNumber) {
+        mQuery = query;
+        mPageNumber = pageNumber;
         if (pageNumber == 0) {
             pageNumber = 1;
         }
         recipeApiClient.searchRecipeApi(query, pageNumber);
+    }
+
+    public void searchOnNextPage() {
+        searchRecipeApi(mQuery, mPageNumber + 1);
     }
 
     public void cancelRequestMethod() {

@@ -1,6 +1,7 @@
 package com.ankittlabs.therecipemaster;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -68,6 +69,15 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         recipeRecyclerView.addItemDecoration(verticalItemDecorator);
         recipeRecyclerView.setAdapter(recipeViewAdapter);
         recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recipeRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    recipeViewModel.searchNextPage();
+                }
+            }
+        });
     }
 
     private void initSearchView() {
