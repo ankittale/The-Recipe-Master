@@ -1,9 +1,13 @@
 package com.ankittlabs.therecipemaster;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
     private RecipeViewAdapter recipeViewAdapter;
     private RecipeViewModel recipeViewModel;
     private SearchView searchView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         if (!recipeViewModel.isViewRecipe()) {
             displaySearchCategory();
         }
+        setSupportActionBar((Toolbar) findViewById(R.id.toolBar));
     }
 
     //subscribe the data
@@ -106,5 +112,19 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         } else {
             displaySearchCategory();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_category) {
+            displaySearchCategory();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
