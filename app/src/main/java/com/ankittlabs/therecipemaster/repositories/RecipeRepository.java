@@ -56,4 +56,8 @@ public class RecipeRepository {
     public void cancelRequestMethod() {
         recipeApiClient.cancelRequest();
     }
+
+    public LiveData<Boolean> getTimeoutRequest() {
+        return recipeApiClient.getTimeoutRequest();
+    }
 }
