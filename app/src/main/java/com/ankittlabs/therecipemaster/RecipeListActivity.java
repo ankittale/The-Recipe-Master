@@ -2,7 +2,6 @@ package com.ankittlabs.therecipemaster;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ankittlabs.therecipemaster.adapter.RecipeViewAdapter;
 import com.ankittlabs.therecipemaster.model.Recipe;
 import com.ankittlabs.therecipemaster.utils.VerticalItemDecorator;
-import com.ankittlabs.therecipemaster.viewmodels.RecipeViewModel;
+import com.ankittlabs.therecipemaster.viewmodels.RecipeListViewModel;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
     private static final String TAG = "RecipeListActivity";
     RecyclerView recipeRecyclerView;
     private RecipeViewAdapter recipeViewAdapter;
-    private RecipeViewModel recipeViewModel;
+    private RecipeListViewModel recipeListViewModel;
     private SearchView searchView;
     private Toolbar toolbar;
 
@@ -37,13 +36,13 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
         setContentView(R.layout.activity_recipe_list);
         recipeRecyclerView = findViewById(R.id.recycler_recipe);
         //View Model Setup
-        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        recipeListViewModel = new ViewModelProvider(this).get(RecipeListViewModel.class);
 
         subscribeObserver();
         initRecyclerView();
         initSearchView();
 
-        if (!recipeViewModel.isViewRecipe()) {
+        if (!recipeListViewModel.isViewRecipe()) {
             displaySearchCategory();
         }
         setSupportActionBar((Toolbar) findViewById(R.id.toolBar));
@@ -51,12 +50,12 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
 
     //subscribe the data
     private void subscribeObserver() {
-        recipeViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+        recipeListViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(List<Recipe> recipes) {
                 if (recipes != null) {
-                    if (recipeViewModel.isViewRecipe()) {
-                        recipeViewModel.setPerformingQuery(false); //Query is completed
+                    if (recipeListViewModel.isViewRecipe()) {
+                        recipeListViewModel.setPerformingQuery(false); //Query is completed
                         recipeViewAdapter.setRecipes(recipes);
                     }
                 }
@@ -75,7 +74,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (!recyclerView.canScrollVertically(1)) {
-                    recipeViewModel.searchNextPage();
+                    recipeListViewModel.searchNextPage();
                 }
             }
         });
@@ -87,7 +86,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
             @Override
             public boolean onQueryTextSubmit(String query) {
                 recipeViewAdapter.displayLoading();
-                recipeViewModel.searchRecipeApi(query, 1);
+                recipeListViewModel.searchRecipeApi(query, 1);
                 searchView.clearFocus();
                 return false;
             }
@@ -109,18 +108,18 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
     @Override
     public void onCategoryClick(String category) {
         recipeViewAdapter.displayLoading();
-        recipeViewModel.searchRecipeApi(category, 1);
+        recipeListViewModel.searchRecipeApi(category, 1);
         searchView.clearFocus();
     }
 
     private void displaySearchCategory() {
-        recipeViewModel.setViewRecipe(false);
+        recipeListViewModel.setViewRecipe(false);
         recipeViewAdapter.displaySearchCategory();
     }
 
     @Override
     public void onBackPressed() {
-        if (recipeViewModel.onBackPressed()) {
+        if (recipeListViewModel.onBackPressed()) {
             super.onBackPressed();
         } else {
             displaySearchCategory();

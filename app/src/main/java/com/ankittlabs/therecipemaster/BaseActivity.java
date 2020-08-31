@@ -17,7 +17,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         FrameLayout frameLayout = layout.findViewById(R.id.activity_container);
         progressBar = layout.findViewById(R.id.progress_bar);
         getLayoutInflater().inflate(layoutResID, frameLayout, true);
-        super.setContentView(layoutResID);
+        super.setContentView(layout);
     }
 
     public void showProgressBar(boolean visibility) {
