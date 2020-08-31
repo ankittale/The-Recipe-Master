@@ -150,4 +150,13 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    public Recipe getRecipeDetails(int position) {
+        if (recipes != null) {
+            if (recipes.size() > 0) {
+                return recipes.get(position);
+            }
+        }
+        return null;
+    }
+
 }

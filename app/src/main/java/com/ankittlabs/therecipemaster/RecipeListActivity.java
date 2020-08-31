@@ -1,5 +1,6 @@
 package com.ankittlabs.therecipemaster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -100,7 +101,9 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
 
     @Override
     public void onRecipeClick(int position) {
-
+        Intent intent = new Intent(RecipeListActivity.this, RecipeActivity.class);
+        intent.putExtra("recipe", recipeViewAdapter.getRecipeDetails(position));
+        startActivity(intent);
     }
 
     @Override
