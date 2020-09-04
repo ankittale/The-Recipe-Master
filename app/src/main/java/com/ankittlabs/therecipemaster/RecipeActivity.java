@@ -65,8 +65,8 @@ public class RecipeActivity extends BaseActivity {
 
         recipeViewModel.getTimeoutRequest().observe(this, new Observer<Boolean>() {
             @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean && !recipeViewModel.didRetrievedRecipe()){
+            public void onChanged(Boolean flag) {
+                if (flag && !recipeViewModel.didRetrievedRecipe()){
                     Log.d("TAG", "onChanged: Timed  out");
                     displayErrorScreen("Error Retrieving Data. Please Check Network Coverage...");
                 }
