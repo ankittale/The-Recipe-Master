@@ -67,7 +67,7 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean){
-                    Log.d(TAG, "onChanged: : Query Exhausted");
+                    recipeViewAdapter.setQueryExhausted();
                 }
             }
         });
