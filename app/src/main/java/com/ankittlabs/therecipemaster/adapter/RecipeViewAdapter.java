@@ -114,7 +114,7 @@ public class RecipeViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void setQueryExhausted(){
         hideLoading();
         Recipe exhaustedRecipe=new Recipe();
-        exhaustedRecipe.setTitle("EXHAUSTED..");
+        exhaustedRecipe.setTitle("EXHAUSTED...");
         recipes.add(exhaustedRecipe);
     }
 
