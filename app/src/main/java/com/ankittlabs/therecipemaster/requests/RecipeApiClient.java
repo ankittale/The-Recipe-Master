@@ -73,12 +73,13 @@ public class RecipeApiClient {
         }, NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    public void searchRecipebyId(String recipeID) {
+    public void searchRecipeById(String recipeID) {
         if (retrieveSingleRecipeRunnable != null) {
             retrieveSingleRecipeRunnable = null;
         }
         retrieveSingleRecipeRunnable = new RetrieveSingleRecipeRunnable(recipeID);
         final Future handler = AppExecutors.getInstance().networkIO().submit(retrieveSingleRecipeRunnable);
+        timeoutRequest.setValue(false);
         AppExecutors.getInstance().networkIO().schedule(new Runnable() {
             @Override
             public void run() {

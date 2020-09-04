@@ -50,7 +50,7 @@ public class RecipeRepository {
     }
 
     public void searchRecipeById(String recipeId){
-        recipeApiClient.searchRecipebyId(recipeId);
+        recipeApiClient.searchRecipeById(recipeId);
     }
 
     public void cancelRequestMethod() {
