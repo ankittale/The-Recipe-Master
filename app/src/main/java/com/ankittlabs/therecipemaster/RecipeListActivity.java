@@ -2,6 +2,7 @@ package com.ankittlabs.therecipemaster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -58,6 +59,15 @@ public class RecipeListActivity extends AppCompatActivity implements OnRecipeLis
                         recipeListViewModel.setPerformingQuery(false); //Query is completed
                         recipeViewAdapter.setRecipes(recipes);
                     }
+                }
+            }
+        });
+
+        recipeListViewModel.isQueryExhausted().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean){
+                    Log.d(TAG, "onChanged: : Query Exhausted");
                 }
             }
         });
